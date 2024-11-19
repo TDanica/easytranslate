@@ -66,4 +66,9 @@ class CurrencyService
 
         return $currency->id;
     }
+
+    public function findSymbolById(int $id): ?string
+    {
+        return Currency::where('id', $id)->value('symbol');
+    }
 }
