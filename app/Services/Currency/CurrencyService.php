@@ -46,8 +46,8 @@ class CurrencyService
 
     public function getCurrenciesByIds(int $fromCurrencyId, int $toCurrencyId): array
     {
-        $fromCurrency = $this->currencyRepository->findSymbolById($fromCurrencyId);
-        $toCurrency = $this->currencyRepository->findSymbolById($toCurrencyId);
+        $fromCurrency = $this->findSymbolById($fromCurrencyId);
+        $toCurrency = $this->findSymbolById($toCurrencyId);
 
         if (!$fromCurrency || !$toCurrency) {
             throw new CurrencyNotFoundException('One or both currencies could not be found.');
