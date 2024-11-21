@@ -7,6 +7,7 @@ use App\Services\Api\ApiClientService;
 use App\Services\Api\ApiServiceFactory;
 use App\Services\Conversion\ExternalApiConversionStrategy;
 use App\Services\Currency\CurrencyApiService;
+use App\Services\Logging\LoggingService;
 use Illuminate\Support\ServiceProvider;
 
 class ApiServiceProvider extends ServiceProvider
@@ -22,7 +23,7 @@ class ApiServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(ApiClientService::class, function ($app) {
-            return new ApiClientService();
+            return new ApiClientService($app->make(LoggingService::class));
         });
 
         $this->app->singleton(CurrencyApiService::class, function ($app) {
