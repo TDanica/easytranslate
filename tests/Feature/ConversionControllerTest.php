@@ -52,9 +52,18 @@ class ConversionControllerTest extends TestCase
                 'result' => 85.00,
             ]);
 
-        $persistenceServiceMock->shouldReceive('saveConversionResult')
-            ->once()
-            ->andReturn((object) ['id' => 1]);
+            $conversion = new \App\Models\Currency\Conversion([
+                'id' => 1,
+                'from_currency_id' => 1,
+                'to_currency_id' => 2,
+                'amount' => 100,
+                'rate' => 1.2,
+                'result' => 120,
+            ]);
+            
+            $persistenceServiceMock->shouldReceive('saveConversionResult')
+                ->once()
+                ->andReturn($conversion);
 
         $conversionStrategy = new ExternalApiConversionStrategy(
             $currencyApiServiceMock,

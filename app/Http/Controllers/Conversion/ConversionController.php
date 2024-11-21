@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Conversion;
 use App\DTO\Conversion\ConversionRequestDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Currency\ConversionRequest;
+use App\Models\Currency\Currency;
 use App\Services\Conversion\CurrencyConversionManager;
 use App\Services\Logging\LoggingService;
 use App\Services\Response\ResponseBuilderService;
@@ -16,6 +17,13 @@ class ConversionController extends Controller
         private LoggingService $loggingService,
         private ResponseBuilderService $responseBuilderService
     ) {}
+
+    public function convertForm()
+    {
+        $currencies = Currency::select(['id', 'code'])->get();
+
+        return view('convert', compact('currencies'));
+    }
 
     public function convert(ConversionRequest $request)
     {
@@ -35,6 +43,7 @@ class ConversionController extends Controller
                 'Currency conversion successful'
             );
         } catch (\Exception $e) {
+            
             $this->loggingService->logError('Currency conversion failed: ' . $e->getMessage(), [
                 'exception' => $e
             ]);

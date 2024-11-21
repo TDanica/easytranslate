@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Currency;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Crypt;
 
 class ConversionRequest extends FormRequest
 {
@@ -33,10 +34,10 @@ class ConversionRequest extends FormRequest
         return [
             'from.required' => 'The source currency is required.',
             'from.size' => 'The source currency must be a 3-letter code.',
-            'from.exists' => 'The source currency must exist in the database.',
+            'from.exists' => 'The source currency must be valid currency.',
             'to.required' => 'The target currency is required.',
             'to.size' => 'The target currency must be a 3-letter code.',
-            'to.exists' => 'The target currency must exist in the database.',
+            'to.exists' => 'The target currency must be valid currency.',
             'amount.required' => 'The amount is required.',
             'amount.numeric' => 'The amount must be a numeric value.',
             'amount.min' => 'The amount must be at least 0.01.',
