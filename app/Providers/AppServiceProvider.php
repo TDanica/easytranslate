@@ -6,9 +6,9 @@ use App\Interfaces\Cache\CachingServiceInterface;
 use App\Interfaces\Logging\LoggingServiceInterface;
 use App\Interfaces\Response\ResponseBuilderInterface;
 use App\Services\Cache\CachingService;
+use App\Services\Logging\LoggingService;
 use App\Services\Response\ResponseBuilderService;
 use Illuminate\Support\ServiceProvider;
-use PHPUnit\TextUI\XmlConfiguration\Logging\Logging;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(ResponseBuilderInterface::class, ResponseBuilderService::class);
 
-        $this->app->singleton(LoggingServiceInterface::class, Logging::class);
+        $this->app->singleton(LoggingServiceInterface::class, LoggingService::class);
     }
 
     /**

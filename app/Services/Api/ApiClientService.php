@@ -3,7 +3,7 @@
 namespace App\Services\Api;
 
 use App\Interfaces\Api\ApiServiceInterface;
-use App\Services\Logging\LoggingService;
+use App\Interfaces\Logging\LoggingServiceInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Log;
@@ -12,7 +12,7 @@ class ApiClientService implements ApiServiceInterface
 {
     private Client $client;
 
-    public function __construct(private LoggingService $loggingService)
+    public function __construct(private LoggingServiceInterface $loggingServiceInterface)
     {
         $this->client = new Client();
     }
@@ -27,7 +27,7 @@ class ApiClientService implements ApiServiceInterface
 
             return json_decode($response->getBody()->getContents(), true);
         } catch (RequestException $e) {
-            $this->loggingService->logError('API request failed: ' . $e->getMessage(), [
+            $this->loggingServiceInterface->logError('API request failed: ' . $e->getMessage(), [
                 'url' => $url,
                 'params' => $params,
                 'exception' => $e->getTraceAsString()

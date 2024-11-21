@@ -5,15 +5,15 @@ namespace App\Http\Controllers\Conversion;
 use App\DTO\Conversion\ConversionRequestDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Currency\ConversionRequest;
+use App\Interfaces\Logging\LoggingServiceInterface;
 use App\Services\Conversion\CurrencyConversionManager;
-use App\Services\Logging\LoggingService;
 use App\Services\Response\ResponseBuilderService;
 
 class ConversionController extends Controller
 {
     public function __construct(
         private CurrencyConversionManager $currencyConversionManager,
-        private LoggingService $loggingService,
+        private LoggingServiceInterface $loggingServiceInterface,
         private ResponseBuilderService $responseBuilderService
     ) {}
 
@@ -35,7 +35,7 @@ class ConversionController extends Controller
                 'Currency conversion successful'
             );
         } catch (\Exception $e) {
-            $this->loggingService->logError('Currency conversion failed: ' . $e->getMessage(), [
+            $this->loggingServiceInterface->logError('Currency conversion failed: ' . $e->getMessage(), [
                 'exception' => $e
             ]);
 

@@ -6,8 +6,8 @@ use App\DTO\Conversion\ConversionDTO;
 use App\DTO\Conversion\ConversionRequestDTO;
 use App\Exceptions\CurrencyConversionException;
 use App\Interfaces\Conversion\ConversionStrategyInterface;
+use App\Interfaces\Logging\LoggingServiceInterface;
 use App\Services\Currency\CurrencyService;
-use App\Services\Logging\LoggingService;
 use Illuminate\Support\Facades\DB;
 
 class CurrencyConversionManager
@@ -15,7 +15,7 @@ class CurrencyConversionManager
     private ConversionStrategyInterface $conversionStrategy;
 
     public function __construct(
-        private LoggingService $loggingService,
+        private LoggingServiceInterface $loggingServiceInterface,
         ConversionStrategyInterface $conversionStrategy,
         private CurrencyConversionPersistenceService $currencyConversionPersistenceService,
         private CurrencyService $currencyService
@@ -43,7 +43,7 @@ class CurrencyConversionManager
             return $this->mapConversionToDTO($conversion, $conversionDTO);
         } catch (\Exception $e) {
             DB::rollBack();
-            $this->loggingService->logError('Currency conversion failed: ' . $e->getMessage());
+            $this->loggingServiceInterface->logError('Currency conversion failed: ' . $e->getMessage());
             throw new CurrencyConversionException();
         }
     }

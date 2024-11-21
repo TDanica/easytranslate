@@ -6,11 +6,11 @@ use App\DTO\Currency\CurrenciesDTO;
 use App\Exceptions\CacheException;
 use App\Exceptions\CurrencyFetchException;
 use App\Exceptions\CurrencyNotFoundException;
+use App\Interfaces\Cache\CachingServiceInterface;
+use App\Interfaces\Logging\LoggingServiceInterface;
 use App\Models\Currency\Currency;
 use App\Repositories\Currency\CurrencyRepository;
 use App\Services\Api\ApiServiceFactory;
-use App\Services\Cache\CachingService;
-use App\Services\Logging\LoggingService;
 use Exception;
 
 class CurrencyService
@@ -20,8 +20,8 @@ class CurrencyService
     public function __construct(
         private ApiServiceFactory $apiServiceFactory,
         private CurrencyRepository $currencyRepository,
-        private CachingService $cachingService,
-        private LoggingService $loggingService
+        private CachingServiceInterface $cachingService,
+        private LoggingServiceInterface $loggingServiceInterface
     ) {
         $this->currencyApiService = $this->apiServiceFactory->create('currency');
     }
@@ -36,10 +36,10 @@ class CurrencyService
 
             return CurrenciesDTO::fromApiResponse($currencies['symbols']);
         } catch (CacheException | CurrencyFetchException $e) {
-            $this->loggingService->logError('Error when fetching currencies: ' . $e->getMessage());
+            $this->loggingServiceInterface->logError('Error when fetching currencies: ' . $e->getMessage());
             throw $e;
         } catch (Exception $e) {
-            $this->loggingService->logError('Unexpected error: ' . $e->getMessage());
+            $this->loggingServiceInterface->logError('Unexpected error: ' . $e->getMessage());
             throw new Exception('An unexpected error occurred while fetching currencies.');
         }
     }
@@ -69,6 +69,6 @@ class CurrencyService
 
     public function findSymbolById(int $id): ?string
     {
-        return Currency::where('id', $id)->value('symbol');
+        return Currency::where('id', $id)->value('code');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Interfaces\Conversion\ConversionStrategyInterface;
+use App\Interfaces\Logging\LoggingServiceInterface;
 use App\Services\Api\ApiClientService;
 use App\Services\Api\ApiServiceFactory;
 use App\Services\Conversion\ExternalApiConversionStrategy;
@@ -22,7 +23,7 @@ class ApiServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(ApiClientService::class, function ($app) {
-            return new ApiClientService();
+            return new ApiClientService($app->make(LoggingServiceInterface::class));
         });
 
         $this->app->singleton(CurrencyApiService::class, function ($app) {

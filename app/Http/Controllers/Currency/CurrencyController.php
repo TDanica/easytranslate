@@ -5,18 +5,16 @@ namespace App\Http\Controllers\Currency;
 use App\Exceptions\CacheException;
 use App\Exceptions\CurrencyFetchException;
 use App\Http\Controllers\Controller;
-use App\Services\Api\ApiServiceFactory;
+use App\Interfaces\Logging\LoggingServiceInterface;
 use App\Services\Currency\CurrencyService;
-use App\Services\Logging\LoggingService;
 use App\Services\Response\ResponseBuilderService;
 use Exception;
 
 class CurrencyController extends Controller
 {
     public function __construct(
-        private ApiServiceFactory $apiServiceFactory,
         private CurrencyService $currencyService,
-        private LoggingService $loggingService,
+        private LoggingServiceInterface $loggingServiceInterface,
         private ResponseBuilderService $responseBuilderService,
     ) {}
 
@@ -31,13 +29,13 @@ class CurrencyController extends Controller
             );
 
         } catch (CurrencyFetchException $e) {
-            $this->loggingService->logError('Currency fetch failed: ' . $e->getMessage());
+            $this->loggingServiceInterface->logError('Currency fetch failed: ' . $e->getMessage());
             return $this->responseBuilderService->error('Something went wrong. Please try again later.', 500);
         } catch (CacheException $e) {
-            $this->loggingService->logError('Cache error: ' . $e->getMessage());
+            $this->loggingServiceInterface->logError('Cache error: ' . $e->getMessage());
             return $this->responseBuilderService->error('There was an issue processing your request. Please try again later.', 500);
         } catch (Exception $e) {
-            $this->loggingService->logError('Unexpected error: ' . $e->getMessage());
+            $this->loggingServiceInterface->logError('Unexpected error: ' . $e->getMessage());
             return $this->responseBuilderService->error('An unexpected error occurred. Please try again later.', 500);
         }
     }

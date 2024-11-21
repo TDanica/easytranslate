@@ -14,7 +14,18 @@ This application uses Docker and Laravel Sail for development. Ensure you have D
 2. Set up Laravel Sail:
    ```
    cd easytranslate
+
+   cp .env.example .env
+
+   docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v $(pwd):/var/www/html \
+    -w /var/www/html \
+    laravelsail/php82-composer:latest composer install
+
    ./vendor/bin/sail up -d
+
+   ./vendor/bin/sail artisan key:generate
    ```
 
 3. Run the migration:
@@ -37,7 +48,7 @@ This application include test for the conversion endpoint:
 
 1. Access the application in your browser:
    ```
-   http://localhost:8000
+   http://localhost:80
    ```
 
 2. Use the `/convert` endpoint to perform currency conversion.

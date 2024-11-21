@@ -17,10 +17,10 @@ class SecurityHeaders
     {
         $response = $next($request);
 
-        $response->headers->set('X-Content-Type-Options', 'nosniff');
-        $response->headers->set('X-XSS-Protection', '1; mode=block');
-        $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
-        $response->headers->set('Content-Security-Policy', "default-src 'self'");
+        $response->headers->set('X-Content-Type-Options', 'nosniff'); // stricter handling of content types 
+        $response->headers->set('X-XSS-Protection', '1; mode=block'); // prevents XSS by blocking
+        $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains'); // enforces https communication
+        // $response->headers->set('Content-Security-Policy', "default-src 'self'"); // load resources only form own domain 
 
         return $response;;
     }
